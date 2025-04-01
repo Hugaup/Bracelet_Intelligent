@@ -15,10 +15,10 @@ This project aims to develop a **wearable medical device** that helps detect ear
 - 📊 Motion data processing pipeline (Python, Jupyter)
 - 🎚️ Signal filtering (Butterworth low-pass filter)
 - 📈 Frequency-domain analysis (FFT)
-- 🤖 Machine Learning models:
+- 🤖 Machine Learning models tested:
   - Logistic Regression
   - Random Forest
-  - Support Vector Machine (SVM)
+  - Support Vector Machine (SVM, which through testing proved to be the best)
 - 🛡️ Designed for hospital use but still in prototype phase
 
 ## 📌 Status
