@@ -26,7 +26,12 @@ This project aims to develop a **wearable medical device** that helps detect ear
 - ✅ Motion detection pipeline implemented
 - ✅ Feature extraction and ML classification operational
 - 🧪 Hardware prototype design conceptualised
-- 🔐 Secure data transfer and compliance roadmap defined
+
+## 🔧 How to Use
+
+- Turn the prototype on
+- Launch the server.py file
+- Go to the localhost:8000 to see the results
 
 ## 👥 Team
 
