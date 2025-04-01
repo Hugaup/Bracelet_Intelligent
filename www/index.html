@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Détection de Frissons – MPU6050</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 20px;
+      transition: background-color 0.5s;
+    }
+    #prediction {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: green;
+    }
+    #alert {
+      display: none;
+      font-size: 30px;
+      font-weight: bold;
+      color: white;
+      background-color: #b30000;
+      padding: 20px;
+      border-radius: 10px;
+      margin: 20px auto;
+      width: 50%;
+    }
+    .chart-container {
+      width: 80%;
+      margin: auto;
+    }
+  </style>
+</head>
+<body style="background-color: #ccffcc;">
+  <h1>Données MPU6050 – Accélération et Gyroscope</h1>
+  <div id="prediction">Prédiction : ...</div>
+  <div id="alert">Frisson prolongé détecté !</div>
+  <div class="chart-container"><canvas id="allDataChart"></canvas></div>
+
+  <script>
+    const MAX_POINTS = 50;
+    const labels = Array(MAX_POINTS).fill("");
+
+    const ctx = document.getElementById("allDataChart").getContext("2d");
+    const allDataChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: labels.slice(),
+        datasets: [
+          { label: "Accel X", borderColor: "red", data: Array(MAX_POINTS).fill(0), tension: 0.3 },
+          { label: "Accel Y", borderColor: "blue", data: Array(MAX_POINTS).fill(0), tension: 0.3 },
+          { label: "Accel Z", borderColor: "green", data: Array(MAX_POINTS).fill(0), tension: 0.3 },
+          { label: "Gyro X", borderColor: "orange", data: Array(MAX_POINTS).fill(0), tension: 0.3 },
+          { label: "Gyro Y", borderColor: "purple", data: Array(MAX_POINTS).fill(0), tension: 0.3 },
+          { label: "Gyro Z", borderColor: "brown", data: Array(MAX_POINTS).fill(0), tension: 0.3 }
+        ]
+      },
+      options: {
+        animation: false,
+        scales: {
+          y: { suggestedMin: -20, suggestedMax: 20 }
+        }
+      }
+    });
+
+    function updateAllDataChart(values) {
+      for (let i = 0; i < allDataChart.data.datasets.length; i++) {
+        allDataChart.data.datasets[i].data.push(values[i]);
+        if (allDataChart.data.datasets[i].data.length > MAX_POINTS) {
+          allDataChart.data.datasets[i].data.shift();
+        }
+      }
+      allDataChart.update();
+    }
+
+    let frissonStart = null;
+    let alertTriggered = false;
+
+    function updatePrediction(prediction) {
+      const predictionText = document.getElementById("prediction");
+      const alertBox = document.getElementById("alert");
+      const body = document.body;
+
+      predictionText.innerText = "Prédiction : " + prediction;
+
+      if (prediction === "frisson") {
+        predictionText.style.color = "red";
+        if (!frissonStart) {
+          frissonStart = Date.now();
+          alertTriggered = false;
+        } else {
+          const duration = (Date.now() - frissonStart) / 1000;
+          if (duration >= 4 && !alertTriggered) {
+            body.style.backgroundColor = "#990000";
+            alertBox.style.display = "block";
+            alertTriggered = true;
+            return;
+          }
+        }
+        body.style.backgroundColor = "#ff9999";
+      } else {
+        predictionText.style.color = "green";
+        body.style.backgroundColor = "white";
+        frissonStart = null;
+        alertTriggered = false;
+        alertBox.style.display = "none";
+      }
+    }
+
+    const ws = new WebSocket("ws://" + location.host + "/ws");
+    ws.onmessage = function(event) {
+      const msg = event.data;
+      if (msg.startsWith("PREDICTION:")) {
+        const prediction = msg.split(":")[1];
+        updatePrediction(prediction);
+      } else {
+        const parts = msg.split(",");
+        if (parts.length >= 7) {
+          updateAllDataChart([
+            parseFloat(parts[1]), // accelX
+            parseFloat(parts[2]), // accelY
+            parseFloat(parts[3]), // accelZ
+            parseFloat(parts[4]), // gyroX
+            parseFloat(parts[5]), // gyroY
+            parseFloat(parts[6])  // gyroZ
+          ]);
+        }
+      }
+    };
+  </script>
+</body>
+</html>

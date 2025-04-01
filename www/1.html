@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Détection de Frissons – MPU6050</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 20px;
+      transition: background-color 0.5s;
+    }
+    #prediction {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: green;
+    }
+    #alert {
+      display: none;
+      font-size: 30px;
+      font-weight: bold;
+      color: white;
+      background-color: #b30000;
+      padding: 20px;
+      border-radius: 10px;
+      margin: 20px auto;
+      width: 50%;
+    }
+    .chart-container {
+      width: 45%;
+      display: inline-block;
+      margin: 20px;
+    }
+  </style>
+</head>
+<body style="background-color: #ccffcc;">
+  <h1>Données MPU6050 – Accélération et Gyroscope</h1>
+  <div id="prediction">🔍 Prédiction : ...</div>
+  <div id="alert">⚠️ Frisson prolongé détecté !</div>
+
+  <div class="chart-container"><canvas id="accelX"></canvas></div>
+  <div class="chart-container"><canvas id="gyroX"></canvas></div>
+  <div class="chart-container"><canvas id="accelY"></canvas></div>
+  <div class="chart-container"><canvas id="gyroY"></canvas></div>
+  <div class="chart-container"><canvas id="accelZ"></canvas></div>
+  <div class="chart-container"><canvas id="gyroZ"></canvas></div>
+
+  <script>
+    const MAX_POINTS = 50;
+    const labels = Array(MAX_POINTS).fill("");
+
+    function createChart(ctx, label, color) {
+      return new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels.slice(),
+          datasets: [{
+            label: label,
+            backgroundColor: color,
+            borderColor: color,
+            data: Array(MAX_POINTS).fill(0),
+            tension: 0.3,
+            fill: false,
+            pointRadius: 2
+          }]
+        },
+        options: {
+          animation: false,
+          scales: {
+            y: { suggestedMin: -20, suggestedMax: 20 }
+          }
+        }
+      });
+    }
+
+    const charts = {
+      accelX: createChart(document.getElementById("accelX"), "Accel X", "red"),
+      accelY: createChart(document.getElementById("accelY"), "Accel Y", "blue"),
+      accelZ: createChart(document.getElementById("accelZ"), "Accel Z", "green"),
+      gyroX: createChart(document.getElementById("gyroX"), "Gyro X", "orange"),
+      gyroY: createChart(document.getElementById("gyroY"), "Gyro Y", "purple"),
+      gyroZ: createChart(document.getElementById("gyroZ"), "Gyro Z", "brown"),
+    };
+
+    function updateChart(chart, value) {
+      chart.data.datasets[0].data.push(value);
+      if (chart.data.datasets[0].data.length > MAX_POINTS) {
+        chart.data.datasets[0].data.shift();
+      }
+      chart.update();
+    }
+
+    let frissonStart = null;
+    let alertTriggered = false;
+
+    function updatePrediction(prediction) {
+      const predictionText = document.getElementById("prediction");
+      const alertBox = document.getElementById("alert");
+      const body = document.body;
+
+      predictionText.innerText = "🔍 Prédiction : " + prediction;
+
+      if (prediction === "frisson") {
+        predictionText.style.color = "red";
+        if (!frissonStart) {
+          frissonStart = Date.now();
+          alertTriggered = false;
+        } else {
+          const duration = (Date.now() - frissonStart) / 1000;
+          if (duration >= 4 && !alertTriggered) {
+            body.style.backgroundColor = "#990000";
+            alertBox.style.display = "block";
+            alertTriggered = true;
+            return;
+          }
+        }
+        body.style.backgroundColor = "#ff9999";
+      } else {
+        predictionText.style.color = "green";
+        body.style.backgroundColor = "white";
+        frissonStart = null;
+        alertTriggered = false;
+        alertBox.style.display = "none";
+      }
+    }
+
+    // WebSocket
+    const ws = new WebSocket("ws://" + location.host + "/ws");
+    ws.onmessage = function(event) {
+      const msg = event.data;
+      if (msg.startsWith("PREDICTION:")) {
+        const prediction = msg.split(":")[1];
+        updatePrediction(prediction);
+      } else {
+        const parts = msg.split(",");
+        if (parts.length >= 7) {
+          updateChart(charts.accelX, parseFloat(parts[1]));
+          updateChart(charts.accelY, parseFloat(parts[2]));
+          updateChart(charts.accelZ, parseFloat(parts[3]));
+          updateChart(charts.gyroX, parseFloat(parts[4]));
+          updateChart(charts.gyroY, parseFloat(parts[5]));
+          updateChart(charts.gyroZ, parseFloat(parts[6]));
+        }
+      }
+    };
+  </script>
+</body>
+</html>
+
