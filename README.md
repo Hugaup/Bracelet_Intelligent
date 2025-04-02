@@ -109,10 +109,10 @@ Bracelet-Intelligent/
 
 ## 🤝 Acknowledgements
 
-Developed by Francesco Ali VENTURA, Allison STIOUI, Virgil TOUCHEBOEUF, Hugo AUPERIN
-In collaboration with Dr. Pierre Jacquet – Hôpital de Saint-Denis
-With the supervision of Nédra MELLOULI
-ESILV Engineering School – Pi² Project
+- Developed by Francesco Ali VENTURA, Allison STIOUI, Virgil TOUCHEBOEUF, Hugo AUPERIN
+- In collaboration with Dr. Pierre Jacquet – Hôpital de Saint-Denis
+- With the supervision of Nédra MELLOULI
+- ESILV Engineering School – Pi² Project
 
 # Version française
 
@@ -209,7 +209,7 @@ Bracelet-Intelligent/
 ```
 
 ## 🤝 Remerciements
-Développé par Francesco Ali VENTURA, Allison STIOUI, Virgil TOUCHEBOEUF, Hugo AUPERIN
-En collaboration avec Dr. Pierre Jacquet – Hôpital de Saint-Denis
-Supervisé par Nédra MELLOULI
-École d'ingénierie ESILV – Projet Pi²
+- Développé par Francesco Ali VENTURA, Allison STIOUI, Virgil TOUCHEBOEUF, Hugo AUPERIN
+- En collaboration avec Dr. Pierre Jacquet – Hôpital de Saint-Denis
+- Supervisé par Nédra MELLOULI
+- École d'ingénierie ESILV – Projet Pi²
