@@ -1,4 +1,4 @@
-# 🩺 Smart Bracelet for Early Sepsis Detection
+# 🩺 Smart Bracelet for Early Sepsis Detection (french version below)
 
 This project aims to build a **wearable detection system** that helps identify early indicators of **sepsis** through the monitoring of abnormal movements such as tremors or chills. It leverages motion data captured by an **ESP32** microcontroller combined with an **MPU6050** sensor and uses a finely tuned **Support Vector Machine (SVM)** model to classify movement patterns in real time.
 
@@ -111,4 +111,105 @@ Bracelet-Intelligent/
 
 Developed by Francesco Ali VENTURA, Allison STIOUI, Virgil TOUCHEBOEUF, Hugo AUPERIN
 In collaboration with Dr. Pierre Jacquet – Hôpital de Saint-Denis
+With the supervision of Nédra MELLOULI
 ESILV Engineering School – Pi² Project
+
+# Version française
+
+# 🩺 Bracelet Intelligent pour la Détection Précoce de Sepsis
+Ce projet vise à construire un **système de détection portable** qui aide à identifier les indicateurs précoces de **sepsis** par la surveillance de mouvements anormaux tels que les tremblements ou les frissons. Il exploite les données de mouvement capturées par un microcontrôleur **ESP32** combiné à un capteur **MPU6050** et utilise un modèle **Support Vector Machine (SVM)** finement ajusté pour classifier les modèles de mouvement en temps réel.
+
+## 🚀 Aperçu du Projet
+- **Matériel**: ESP32 (microcontrôleur) + MPU6050 (accéléromètre + gyroscope)
+- **Modèle**: Support Vector Machine (SVM), entraîné sur des données de mouvement personnalisées
+- **Entrée**: Données de mouvement d'accéléromètre et de gyroscope
+- **Sortie**: Classification en direct des mouvements (normal / suspect)
+- **Cas d'utilisation**: Détection précoce de détresse neurologique potentielle liée au sepsis en milieu clinique
+
+## 🧠 Détails d'Apprentissage Automatique
+Le modèle de classification des mouvements a été entraîné à l'aide de données collectées et étiquetées sur mesure. Les données ont été segmentées en utilisant une approche de fenêtre glissante, et les caractéristiques ont été extraites à la fois dans les domaines temporel et fréquentiel (via FFT).
+
+### ✅ Meilleure Configuration du Modèle
+| Paramètre           | Valeur          |
+|---------------------|-----------------|
+| Fréquence de coupure| 20 Hz           |
+| Taille de la fenêtre| 150 échantillons|
+| Pas                 | 75 échantillons |
+| FFT utilisée        | Oui             |
+| Modèle              | SVM             |
+| Métrique d'évaluation| precision_macro |
+| Score moyen         | 0.9979          |
+| Écart type          | 0.0043          |
+
+*Les notebooks pour le traitement des données, l'extraction des caractéristiques et l'entraînement du modèle sont inclus dans ce dépôt.*
+
+---
+
+## 🔧 Comment Utiliser
+### 1. Configurer le Firmware ESP32
+Modifiez les lignes suivantes dans `basic_readings/basic_readings.ino` avec votre propre configuration réseau et serveur:
+```cpp
+const char* ssid = "NOM_DE_VOTRE_WIFI";
+const char* password = "MOT_DE_PASSE_WIFI";
+const char* host = "ADRESSE_IP_DE_VOTRE_PC";
+```
+
+### 2. Téléverser le Firmware
+- Branchez l'ESP32 à votre ordinateur à l'aide d'un câble USB.
+- Ouvrez le fichier `.ino` dans l'IDE Arduino ou PlatformIO.
+- Appuyez et maintenez le bouton **BOOT** sur l'ESP32.
+- Cliquez sur **Téléverser** pour flasher le script.
+- Relâchez le bouton **BOOT** lorsque le téléversement commence.
+
+### 3. Alimenter le Bracelet
+Vous pouvez alimenter le bracelet ESP32 via:
+- Connexion USB à votre PC
+- Une batterie externe
+- N'importe quelle source d'alimentation USB 5V
+
+---
+
+### 4. Exécuter les Scripts de Détection ou de Collecte de Données
+#### 🟢 Détection en Temps Réel
+Pour commencer à détecter les mouvements anormaux en utilisant le modèle entraîné, exécutez:
+```bash
+python server.py
+```
+Ce script écoute les données provenant de l'ESP32 et classifie les mouvements entrants en temps réel.
+
+## 🧪 Collecter des Données Étiquetées (pour améliorer le modèle)
+```
+python server_labeled.py
+```
+Utilisez ce script pour enregistrer des sessions de mouvements étiquetés (par exemple, repos, tremblement, rotation) et les ajouter à votre ensemble de données.
+
+## 📁 Structure du Projet
+```
+Bracelet-Intelligent/
+├── analyse_mouvements_sepsis.ipynb # Analyse Exploratoire des Données (EDA)
+├── entrainement_modele.ipynb # Pipeline d'entraînement du modèle
+├── EvaluationModelsEtParametres.ipynb # Test des hyperparamètres
+├── basic_readings/
+│   └── basic_readings.ino # Firmware ESP32
+├── data/ # Ensembles de données de mouvements collectés
+│   ├── frisson.csv
+│   ├── repos.csv
+│   └── ...
+├── features_dataset.csv # Caractéristiques finales utilisées pour l'entraînement
+├── modele_entraine.joblib # Modèle SVM entraîné
+├── scaler.joblib # StandardScaler pour la normalisation des entrées
+├── resultats/ # Sorties des serveurs
+│   └── test2.csv
+├── resultats_grid_search.csv # Évaluation du réglage des paramètres
+├── server.py # Serveur de classification en temps réel
+├── server_labeled.py # Serveur de collecte de données
+├── www/
+│   ├── index.html # Interface frontend GitHub Pages
+│   └── 1.html
+```
+
+## 🤝 Remerciements
+Développé par Francesco Ali VENTURA, Allison STIOUI, Virgil TOUCHEBOEUF, Hugo AUPERIN
+En collaboration avec Dr. Pierre Jacquet – Hôpital de Saint-Denis
+Supervisé par Nédra MELLOULI
+École d'ingénierie ESILV – Projet Pi²
