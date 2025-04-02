@@ -4,9 +4,9 @@
 #include <Adafruit_MPU6050.h>
 #include <Adafruit_Sensor.h>
 
-const char* ssid = "Meteor-0A847412";
-const char* password = "N47tPRKv3dKbLhfx";
-const char* host = "192.168.1.189"; // IP de ton PC
+const char* ssid = "X";
+const char* password = "X";
+const char* host = "X"; // IP de ton PC
 const uint16_t port = 8080;
 
 WebSocketsClient webSocket;
