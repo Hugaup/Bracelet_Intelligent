@@ -33,7 +33,24 @@ _Notebooks for data processing, feature extraction, and model training are inclu
 
 ## 🔧 How to Use
 
-### 1. Configure the ESP32 Firmware
+### 1. Wiring Instructions
+
+Connect the MPU6050 accelerometer/gyroscope sensor to your ESP32 using the following pin connections:
+
+| MPU6050 Pin | Connect to ESP32 |
+|-------------|-----------------|
+| VCC         | 3.3V (or 5V, depending on your module – most support both) |
+| GND         | GND             |
+| SDA         | GPIO21 (default SDA) |
+| SCL         | GPIO22 (default SCL) |
+
+#### Notes
+
+- Most MPU6050 modules support both 3.3V and 5V power supply
+- The ESP32 uses GPIO21 and GPIO22 as the default I2C pins
+- No additional pull-up resistors are required as the ESP32 has internal pull-ups
+
+### 2. Configure the ESP32 Firmware
 
 Edit the following lines in `basic_readings/basic_readings.ino` with your own network and server configuration:
 
@@ -43,7 +60,7 @@ const char* password = "YOUR_WIFI_PASSWORD";
 const char* host = "YOUR_PC_IP_ADDRESS";
 ```
 
-### 2. Upload the Firmware
+### 3. Upload the Firmware
 
 - Plug the ESP32 into your computer using a USB cable.
 - Open the `.ino` file in the Arduino IDE or PlatformIO.
@@ -51,7 +68,7 @@ const char* host = "YOUR_PC_IP_ADDRESS";
 - Click **Upload** to flash the script.
 - Release the **BOOT** button when the upload starts.
 
-### 3. Power the Bracelet
+### 4. Power the Bracelet
 
 You can power the ESP32 bracelet via:
 
@@ -146,7 +163,23 @@ Le modèle de classification des mouvements a été entraîné à l'aide de donn
 ---
 
 ## 🔧 Comment Utiliser
-### 1. Configurer le Firmware ESP32
+
+### 1. Instructions de Câblage
+Connectez le capteur accéléromètre/gyroscope MPU6050 à votre ESP32 en utilisant les connexions suivantes :
+
+| Broche MPU6050 | Connexion à l'ESP32 |
+|----------------|---------------------|
+| VCC            | 3.3V (ou 5V, selon votre module - la plupart supportent les deux) |
+| GND            | GND                 |
+| SDA            | GPIO21 (SDA par défaut) |
+| SCL            | GPIO22 (SCL par défaut) |
+
+#### Remarques
+- La plupart des modules MPU6050 supportent une alimentation de 3.3V et 5V
+- L'ESP32 utilise les broches GPIO21 et GPIO22 comme broches I2C par défaut
+- Aucune résistance de tirage (pull-up) supplémentaire n'est nécessaire car l'ESP32 possède des résistances de tirage internes
+
+### 2. Configurer le Firmware ESP32
 Modifiez les lignes suivantes dans `basic_readings/basic_readings.ino` avec votre propre configuration réseau et serveur:
 ```cpp
 const char* ssid = "NOM_DE_VOTRE_WIFI";
@@ -154,14 +187,14 @@ const char* password = "MOT_DE_PASSE_WIFI";
 const char* host = "ADRESSE_IP_DE_VOTRE_PC";
 ```
 
-### 2. Téléverser le Firmware
+### 3. Téléverser le Firmware
 - Branchez l'ESP32 à votre ordinateur à l'aide d'un câble USB.
 - Ouvrez le fichier `.ino` dans l'IDE Arduino ou PlatformIO.
 - Appuyez et maintenez le bouton **BOOT** sur l'ESP32.
 - Cliquez sur **Téléverser** pour flasher le script.
 - Relâchez le bouton **BOOT** lorsque le téléversement commence.
 
-### 3. Alimenter le Bracelet
+### 4. Alimenter le Bracelet
 Vous pouvez alimenter le bracelet ESP32 via:
 - Connexion USB à votre PC
 - Une batterie externe
