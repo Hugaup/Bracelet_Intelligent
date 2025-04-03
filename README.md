@@ -33,9 +33,9 @@ _Notebooks for data processing, feature extraction, and model training are inclu
 
 ## 🔧 How to Use
 
-### 1. Wiring Instructions
+### 1. Wiring details
 
-Connect the MPU6050 accelerometer/gyroscope sensor to your ESP32 using the following pin connections:
+The MPU6050 accelerometer/gyroscope sensor is connected to the ESP32 using the following pin connections:
 
 | MPU6050 Pin | Connect to ESP32 |
 |-------------|-----------------|
@@ -164,8 +164,8 @@ Le modèle de classification des mouvements a été entraîné à l'aide de donn
 
 ## 🔧 Comment Utiliser
 
-### 1. Instructions de Câblage
-Connectez le capteur accéléromètre/gyroscope MPU6050 à votre ESP32 en utilisant les connexions suivantes :
+### 1. Description du Câblage
+Le capteur accéléromètre/gyroscope MPU6050 est connecté à l'ESP32 en utilisant les connexions suivantes :
 
 | Broche MPU6050 | Connexion à l'ESP32 |
 |----------------|---------------------|
